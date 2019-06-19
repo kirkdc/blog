@@ -14,8 +14,15 @@ export const fetchPostsAndUsers = () => async (dispatch, getState) => {
   await dispatch(fetchPosts()); //await makes sure nothing below this line executes until we sucessfully fetch the list of post and dispatched the action for it
 
   //now we use lodash
-  const userIds = _.uniq(_.map(getState().posts, "userId"));
-  userIds.forEach(id => dispatch(fetchUser(id)));
+  // const userIds = _.uniq(_.map(getState().posts, "userId"));
+  // userIds.forEach(id => dispatch(fetchUser(id)));
+  //the code below replaces the code above from const. The below code makes use of _.chain(lodash chain)
+
+  _.chain(getState().posts)
+    .map('userId')
+    .uniq()
+    .forEach(id => dispatch(fetchUser(id)))
+    .value();
 };
 
 export const fetchPosts = () => async dispatch => {
